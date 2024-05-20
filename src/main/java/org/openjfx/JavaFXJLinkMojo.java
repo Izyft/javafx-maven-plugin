@@ -304,7 +304,10 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
 
             commandArguments.add(" --add-modules");
             if (moduleDescriptor != null) {
-                commandArguments.add(" " + moduleDescriptor.name());
+                String s = " " + moduleDescriptor.name();
+                if (includeLocales != null)
+                    s += ",jdk.localedata";
+                commandArguments.add(s);
             } else {
                 throw new MojoExecutionException("jlink requires a module descriptor");
             }
