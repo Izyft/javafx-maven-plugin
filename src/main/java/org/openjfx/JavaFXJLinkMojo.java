@@ -72,11 +72,11 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
 
     /**
      * Compression level of the resources being used, equivalent to:
-     * <code>-c, --compress=level</code>. Valid values: <code>0, 1, 2</code>,
-     * default 0
+     * <code>-c, --compress=level</code>. Valid values: <code>zip-[0-9]</code>,
+     * default zip-6
      */
-    @Parameter(property = "javafx.compress", defaultValue = "0")
-    private Integer compress;
+    @Parameter(property = "javafx.compress", defaultValue = "zip-6")
+    private String compress;
 
     /**
      * Remove the <code>includes</code> directory in the resulting runtime image,
@@ -103,6 +103,9 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
      */
     @Parameter(property = "javafx.ignoreSigningInformation", defaultValue = "false")
     private boolean ignoreSigningInformation;
+
+    @Parameter(property = "javafx.includeLocales")
+    private String includeLocales;
 
     /**
      * Turn on verbose mode, equivalent to: <code>--verbose</code>, default false
@@ -166,7 +169,7 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
         }
 
         handleWorkingDirectory();
-        
+
         Map<String, String> enviro = handleSystemEnvVariables();
         CommandLine commandLine = getExecutablePath(jlinkExecutable, enviro, workingDirectory);
 
@@ -336,10 +339,14 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
         }
         if (compress != null) {
             commandArguments.add(" --compress");
-            if (compress < 0 || compress > 2) {
-                throw new MojoFailureException("The given compress parameters " + compress + " is not in the valid value range from 0..2");
+            if (compress.matches("zip-\\d")) {
+                throw new MojoFailureException("The given compress parameters " + compress + " have an incorrect format");
             }
             commandArguments.add(" " + compress);
+        }
+        if (includeLocales != null) {
+            commandArguments.add(" --include-locales");
+            commandArguments.add(" " + includeLocales);
         }
         if (noHeaderFiles) {
             commandArguments.add(" --no-header-files");
