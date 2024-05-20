@@ -161,7 +161,7 @@ abstract class JavaFXBaseMojo extends AbstractMojo {
     */
     @Component
     private ToolchainManager toolchainManager;
-   
+
     List<String> classpathElements;
     List<String> modulepathElements;
     Map<String, JavaModuleDescriptor> pathElements;
@@ -367,13 +367,9 @@ abstract class JavaFXBaseMojo extends AbstractMojo {
 
     Map<String, String> handleSystemEnvVariables() {
         Map<String, String> enviro = new HashMap<>();
-        try {
-            Properties systemEnvVars = CommandLineUtils.getSystemEnvVars();
-            for (Map.Entry<?, ?> entry : systemEnvVars.entrySet()) {
-                enviro.put((String) entry.getKey(), (String) entry.getValue());
-            }
-        } catch (IOException x) {
-            getLog().error("Could not assign default system environment variables.", x);
+        Properties systemEnvVars = CommandLineUtils.getSystemEnvVars();
+        for (Map.Entry<?, ?> entry : systemEnvVars.entrySet()) {
+            enviro.put((String) entry.getKey(), (String) entry.getValue());
         }
 
         return enviro;
