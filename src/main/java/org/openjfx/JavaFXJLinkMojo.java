@@ -339,7 +339,7 @@ public class JavaFXJLinkMojo extends JavaFXBaseMojo {
         }
         if (compress != null) {
             commandArguments.add(" --compress");
-            if (compress.matches("zip-\\d")) {
+            if (!compress.matches("zip-\\d")) {
                 throw new MojoFailureException("The given compress parameters " + compress + " have an incorrect format");
             }
             commandArguments.add(" " + compress);
